@@ -1,0 +1,18 @@
+{
+    "component-dependencies": {
+        "oj-sp": {
+            "version": "2104.0.0-rc.2.0",
+            "components": {
+                "simple-create-edit": "2104.0.0-rc.2.0",
+                "smart-filter-search": "2104.0.0-rc.2.0",
+                "list-item-template": "2104.0.0-rc.2.0"
+            }
+        },
+        "oj-dynamic": {
+            "version": "9.2.0-rc.3",
+            "components": {
+                "form": "9.2.0-rc.3"
+            }
+        }
+    }
+   }

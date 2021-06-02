@@ -1,0 +1,23 @@
+{
+  "SEARCH_PAGE_TITLE": "Manage Orders",
+    "@SEARCH_PAGE_TITLE": {
+    "description": ""
+   },
+  "CREATE_ORDER_BUTTON": "Create Order",
+  "@CREATE_ORDER_BUTTON": {
+    "description": ""
+  },
+  "ASK_HINT": "Search Customers and Orders",
+  "@ASK_HINT": {
+    "description": ""
+  },
+  "CONFIRM_ORDER_DELETE_SUCCESS_MSG": "You have successfully deleted your order.",
+  "@CONFIRM_ORDER_DELETE_SUCCESS_MSG": {
+    "description": ""
+  },
+  "ORDER_NUMBER_PREFIX": "Order Number:",
+  "@ORDER_NUMBER_PREFIX": {
+    "description": ""
+  }
+
+}

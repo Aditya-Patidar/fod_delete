@@ -1,0 +1,416 @@
+{
+  "pageModelVersion": "2010.0.0",
+  "title": "",
+  "description": "",
+  "variables": {
+    "allFilters": {
+      "type": "filterChip[]",
+      "defaultValue": "{{$page.variables.selectContextValue ? (($page.variables.appliedFilters || []).concat([ { 'label': $page.variables.selectContextValue, 'filter': 'keyword', 'value': $page.variables.selectContextValue } ])) :  $page.variables.appliedFilters }}"
+    },
+    "appliedFilters": {
+      "type": "filterChip[]",
+      "defaultValue": "{{ $page.variables.appliedFiltersStr && $page.variables.appliedFiltersStr.length > 0 ? JSON.parse($page.variables.appliedFiltersStr) : [] }}",
+      "onValueChanged": {
+        "chains": [
+          {
+            "chainId": "updateAllFilters"
+          }
+        ]
+      }
+    },
+    "appliedFiltersStr": {
+      "type": "string",
+      "input": "fromUrl",
+      "defaultValue": "",
+      "onValueChanged": {
+        "chains": [
+          {
+            "chainId": "updateAppliedFilters",
+            "parameters": {}
+          }
+        ]
+      }
+    },
+    "askHint": {
+      "type": "string",
+      "defaultValue": "[[ $application.translations.app.ASK_HINT ]]"
+    },
+    "currentOrderId": {
+      "type": "string"
+    },
+    "currentOrderNumber": {
+      "type": "string"
+    },
+    "displayMode": {
+      "type": "string"
+    },
+    "expanded": {
+      "type": "string",
+      "defaultValue": "auto"
+    },
+    "goToParentOption": {
+      "type": "boolean",
+      "defaultValue": true
+    },
+    "pageTitle": {
+      "type": "string",
+      "defaultValue": "[[ $application.translations.app.SEARCH_PAGE_TITLE ]]"
+    },
+    "primaryAction": {
+      "type": "action"
+    },
+    "searchResultsDP": {
+      "type": "oj-sp/data-provider/SmartSearchAndFilterDataProvider",
+      "defaultValue": {
+        "endpoint": "faFodOrder/advancedsearchall_fa-fod-order",
+        "options": {
+          "filterCriterion": "{{$page.variables.allFilters}}",
+          "parameters": {
+            "smartSearchName": "fodOrderSearch",
+            "searchType": "SEARCH"
+          },
+          "recentSearches": {
+            "endpoint": "fodRecentSearches/save"
+          }
+        }
+      }
+    },
+    "searchSuggestionsDP": {
+      "type": "oj-sp/data-provider/SmartSuggestionChipsDataProvider",
+      "defaultValue": {
+        "dataProviders": {
+          "recentSearches": {
+            "endpoint": "fodRecentSearches/getall",
+            "uriParameters": {
+              "smartSearchName": "fodOrderSearch",
+              "limit": 5
+            }
+          },
+          "autocompleteSearch": {
+            "endpoint": "faFodOrder/advancedsearchall_fa-fod-order",
+            "uriParameters": {
+              "smartSearchName": "fodOrderSearch",
+              "searchType": "AUTOCOMPLETE"
+            }
+          }
+        }
+      }
+    },
+    "secondaryActions": {
+      "type": "action[]"
+    },
+    "selectContextData": {
+      "type": "vb/ArrayDataProvider"
+    },
+    "selectContextItemText": {
+      "type": "string",
+      "defaultValue": "label"
+    },
+    "selectContextLabelHint": {
+      "type": "string"
+    },
+    "selectContextValue": {
+      "type": "string",
+      "defaultValue": null,
+      "persisted": "device",
+      "input": "fromUrl",
+      "onValueChanged": {
+        "chains": [
+          {
+            "chainId": "updateAllFilters"
+          }
+        ]
+      }
+    },
+    "showAllTotalCount": {
+      "type": "boolean",
+      "defaultValue": true
+    },
+    "subtitle": {
+      "type": "string",
+      "defaultValue": "Page Subtitle"
+    },
+    "suggestionFiltersDP": {
+      "type": "oj-sp/data-provider/SuggestionFiltersDataProvider",
+      "defaultValue": {
+        "//": "specify endpoint for suggest search below",
+        "endpoint": null,
+        "uriParameters": {
+          "smartSearchName": "<The name of the Smart Search as registered by the product team>"
+        }
+      }
+    }
+  },
+  "metadata": {},
+  "types": {
+    "action": {
+      "id": "string",
+      "label": "string",
+      "display": "string",
+      "icon": "string"
+    },
+    "contextSelectType": {
+      "value": "string",
+      "label": "string"
+    },
+    "filterChip": {
+      "filter": "string",
+      "label": "string",
+      "value": "any",
+      "count": "number"
+    }
+  },
+  "chains": {
+    "goToParent": {
+      "root": "navigateToParentPage",
+      "description": "goToParent",
+      "actions": {
+        "navigateToParentPage": {
+          "module": "vb/action/builtin/navigateToPageAction",
+          "parameters": {
+            "page": "/",
+            "params": {}
+          }
+        }
+      }
+    },
+    "ListItemTemplateSpSecondaryActionChain": {
+      "description": "",
+      "root": "assignVariables",
+      "actions": {
+        "assignVariables": {
+          "module": "vb/action/builtin/assignVariablesAction",
+          "parameters": {
+            "$page.variables.currentOrderId": {
+              "source": "{{ $variables.current.data.OrderId }}"
+            },
+            "$page.variables.currentOrderNumber": {
+              "source": "{{ $variables.current.data.OrderNumber }}"
+            }
+          },
+          "outcomes": {
+            "success": "callConfirmDeleteDialogOpen"
+          }
+        },
+        "callConfirmDeleteDialogOpen": {
+          "module": "vb/action/builtin/callComponentMethodAction",
+          "parameters": {
+            "component": "{{ document.getElementById('order-delete-conf-dialog') }}",
+            "method": "open"
+          }
+        }
+      },
+      "variables": {
+        "actionId": {
+          "required": true,
+          "type": "string",
+          "input": "fromCaller"
+        },
+        "key": {
+          "required": true,
+          "type": "any",
+          "input": "fromCaller"
+        },
+        "index": {
+          "required": true,
+          "type": "number",
+          "input": "fromCaller"
+        },
+        "current": {
+          "required": true,
+          "type": "any",
+          "input": "fromCaller"
+        }
+      }
+    },
+    "updateAllFilters": {
+      "root": "updateAllFiltersAction",
+      "actions": {
+        "updateAllFiltersAction": {
+          "module": "vb/action/builtin/assignVariablesAction",
+          "parameters": {
+            "$page.variables.allFilters": {
+              "source": "{{$page.variables.selectContextValue ? (($page.variables.appliedFilters || []).concat([ { 'type': 'keyword', 'filter': 'keyword', 'value': $page.variables.selectContextValue } ])) :  $page.variables.appliedFilters }}",
+              "reset": "empty"
+            }
+          },
+          "outcomes": {
+            "success": "navigateToSelf"
+          }
+        },
+        "navigateToSelf": {
+          "module": "vb/action/builtin/navigateToPageAction",
+          "parameters": {
+            "page": "[[ $application.currentPage.id ]]",
+            "params": {
+              "appliedFiltersStr": "{{ $page.variables.appliedFilters && $page.variables.appliedFilters.length ? JSON.stringify($page.variables.appliedFilters) : undefined }}",
+              "selectContextValue": "{{ $page.variables.selectContextValue }}"
+            },
+            "history": "push"
+          }
+        }
+      }
+    },
+    "updateAppliedFilters": {
+      "root": "updatAppliedFiltersAction",
+      "actions": {
+        "updatAppliedFiltersAction": {
+          "module": "vb/action/builtin/assignVariablesAction",
+          "parameters": {
+            "$page.variables.appliedFilters": {
+              "source": "{{ $page.variables.appliedFiltersStr && $page.variables.appliedFiltersStr.length > 0 ? JSON.parse($page.variables.appliedFiltersStr) : [] }}",
+              "reset": "empty"
+            }
+          }
+        }
+      }
+    },
+    "noButtonActionChain": {
+      "description": "",
+      "root": "callComponentOrderDeleteConfDialogClose",
+      "actions": {
+        "callComponentOrderDeleteConfDialogClose": {
+          "module": "vb/action/builtin/callComponentMethodAction",
+          "parameters": {
+            "component": "{{ document.getElementById('order-delete-conf-dialog') }}",
+            "method": "close"
+          }
+        }
+      },
+      "variables": {
+        "detail": {
+          "required": true,
+          "type": "any",
+          "input": "fromCaller"
+        }
+      }
+    },
+    "yesButtonActionChain": {
+      "description": "",
+      "root": "callConfirmDeleteDialogClose",
+      "actions": {
+        "callConfirmDeleteDialogClose": {
+          "module": "vb/action/builtin/callComponentMethodAction",
+          "parameters": {
+            "component": "{{ document.getElementById('order-delete-conf-dialog') }}",
+            "method": "close"
+          },
+          "outcomes": {
+            "success": "callDeleteOrder"
+          }
+        },
+        "fireNotification": {
+          "module": "vb/action/builtin/fireNotificationEventAction",
+          "parameters": {
+            "target": "leaf",
+            "summary": "[[ $chain.results.callDeleteOrder.message.summary ]]",
+            "type": "error",
+            "displayMode": "persist"
+          }
+        },
+        "callDeleteOrder": {
+          "module": "vb/action/builtin/restAction",
+          "parameters": {
+            "endpoint": "fodOrders/delete_fodOrders",
+            "uriParams": {
+              "fodOrders_Id": "{{ $page.variables.currentOrderId }}"
+            }
+          },
+          "outcomes": {
+            "failure": "fireNotification",
+            "success": "refreshDataProvider"
+          }
+        },
+        "refreshDataProvider": {
+          "module": "vb/action/builtin/fireDataProviderEventAction",
+          "parameters": {
+            "refresh": null,
+            "target": "[[ $page.variables.searchResultsDP ]]"
+          },
+          "outcomes": {
+            "success": "fireNotification2"
+          }
+        },
+        "fireNotification2": {
+          "module": "vb/action/builtin/fireNotificationEventAction",
+          "parameters": {
+            "target": "leaf",
+            "displayMode": "transient",
+            "type": "confirmation",
+            "summary": "[[ $application.translations.app.CONFIRM_ORDER_DELETE_SUCCESS_MSG ]]",
+            "message": "[[ $application.translations.app.ORDER_NUMBER_PREFIX + ' '+ $page.variables.currentOrderNumber ]]"
+          }
+        }
+      },
+      "variables": {
+        "detail": {
+          "required": true,
+          "type": "any",
+          "input": "fromCaller"
+        }
+      }
+    }
+  },
+  "eventListeners": {
+    "confirmNoOjAction": {
+      "chains": [
+        {
+          "chainId": "noButtonActionChain",
+          "parameters": {
+            "detail": "{{ $event.detail }}"
+          }
+        }
+      ]
+    },
+    "confirmYesOjAction": {
+      "chains": [
+        {
+          "chainId": "yesButtonActionChain",
+          "parameters": {
+            "detail": "{{ $event.detail }}"
+          }
+        }
+      ]
+    },
+    "ojSpGoToParent": {
+      "chains": [
+        {
+          "chainId": "goToParent",
+          "parameters": {}
+        }
+      ]
+    },
+    "ojSpListItemTemplateSpSecondaryAction": {
+      "chains": [
+        {
+          "chainId": "ListItemTemplateSpSecondaryActionChain",
+          "parameters": {
+            "actionId": "{{$event.detail.actionId}}",
+            "key": "{{ $current.key }}",
+            "index": "{{ $current.index }}",
+            "current": "{{ $current }}"
+          }
+        }
+      ]
+    }
+  },
+  "imports": {
+    "components": {
+      "oj-button": {
+        "path": "ojs/ojbutton"
+      },
+      "oj-dialog": {
+        "path": "ojs/ojdialog"
+      },
+      "oj-list-view": {
+        "path": "ojs/ojlistview"
+      },
+      "oj-sp-list-item-template": {
+        "path": "oj-sp/list-item-template/loader"
+      },
+      "oj-sp-smart-filter-search": {
+        "path": "oj-sp/smart-filter-search/loader"
+      }
+    }
+  }
+}

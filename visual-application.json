@@ -1,0 +1,14 @@
+{
+    "vbcs.dt.version": "20200707-21.01.88-SNAPSHOT:20200722-bufp_41222::20200921-bufp_41649::20200817-bufp_42028",
+    "source.version": "2104",
+    "dependencies": {
+        "upgrade": "micro",
+        "paths": {
+            "jet": "https://static.oracle.com/cdn/jet/9.2.0",
+            "telemetry": "https://static-stage.oracle.com/cdn/trace/1.0.0-rc.1",
+            "visualRuntime": "https://static-stage.oracle.com/cdn/vb/2104.0.0-alpha.3"
+        }
+    },
+    "rootURL": "fodtutorial-2104",
+    "version": "0.1"
+}

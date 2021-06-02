@@ -1,0 +1,511 @@
+{
+  "pageModelVersion": "19.4.3",
+  "title": "",
+  "description": "",
+  "variables": {
+    "avatar": {
+      "type": {
+        "initials": "string",
+        "src": "string"
+      },
+      "defaultValue": {
+        "initials": "",
+        "src": ""
+      }
+    },
+    "contextualInfoLabelVisible": {
+      "type": "boolean",
+      "defaultValue": false
+    },
+    "contextualInfoSticky": {
+      "type": "boolean",
+      "defaultValue": false
+    },
+    "dirtyDataFlag": {
+      "type": "boolean",
+      "defaultValue": false
+    },
+    "displayMode": {
+      "type": "string"
+    },
+    "formState": {
+      "type": "string",
+      "defaultValue": ""
+    },
+    "goToParentOption": {
+      "type": "boolean",
+      "defaultValue": true
+    },
+    "isSaved": {
+      "type": "boolean",
+      "defaultValue": false
+    },
+    "name": {
+      "type": "string"
+    },
+    "objectId": {
+      "type": "string",
+      "defaultValue": ""
+    },
+    "pageTitle": {
+      "type": "string"
+    },
+    "pageTitlePlaceholder": {
+      "type": "string",
+      "defaultValue": "New Page"
+    },
+    "primaryAlwaysOn": {
+      "type": "boolean",
+      "defaultValue": true
+    },
+    "saveOption": {
+      "type": "string",
+      "defaultValue": "off"
+    },
+    "subtitle": {
+      "type": "string",
+      "defaultValue": "Page Subtitle"
+    }
+  },
+  "metadata": {},
+  "types": {},
+  "chains": {
+    "ButtonActionChain": {
+      "description": "",
+      "root": "callHelloDialogCloseMethod",
+      "actions": {
+        "callHelloDialogCloseMethod": {
+          "module": "vb/action/builtin/callComponentMethodAction",
+          "parameters": {
+            "component": "{{ document.getElementById('hello-dialog') }}",
+            "method": "close"
+          }
+        }
+      },
+      "variables": {
+        "detail": {
+          "required": true,
+          "type": "any",
+          "input": "fromCaller"
+        }
+      }
+    },
+    "checkBeforeExit": {
+      "root": "checkDirtyDataFlag",
+      "description": "",
+      "actions": {
+        "checkDirtyDataFlag": {
+          "module": "vb/action/builtin/ifAction",
+          "parameters": {
+            "condition": "{{ $page.variables.dirtyDataFlag }}"
+          },
+          "outcomes": {
+            "true": "callOpenDialog"
+          }
+        },
+        "callOpenDialog": {
+          "module": "vb/action/builtin/callModuleFunctionAction",
+          "parameters": {
+            "module": "{{$page.functions}}",
+            "functionName": "checkWithUser",
+            "returnType": "string"
+          },
+          "outcomes": {
+            "success": "checkDialogResponse"
+          }
+        },
+        "checkDialogResponse": {
+          "module": "vb/action/builtin/ifAction",
+          "parameters": {
+            "condition": "{{ $chain.results.callOpenDialog  === 'YES'}}"
+          },
+          "outcomes": {
+            "false": "stopNavigation",
+            "true": "continueNavigation"
+          }
+        },
+        "stopNavigation": {
+          "module": "vb/action/builtin/navigateToPageAction",
+          "parameters": {
+            "page": "[[ $application.currentPage.id ]]",
+            "params": {
+              "objectId": "{{ $page.variables.objectId }}",
+              "formType": "edit",
+              "dirtyDataFlag": "{{ $page.variables.dirtyDataFlag }}"
+            },
+            "history": "push"
+          },
+          "outcomes": {
+            "success": "staySamePage"
+          }
+        },
+        "staySamePage": {
+          "module": "vb/action/builtin/returnAction",
+          "parameters": {
+            "outcome": "success",
+            "payload": "{{ {\"cancelled\":true} }}"
+          }
+        },
+        "continueNavigation": {
+          "module": "vb/action/builtin/returnAction",
+          "parameters": {
+            "outcome": "success"
+          }
+        }
+      },
+      "variables": {}
+    },
+    "dialogCloseChain": {
+      "description": "",
+      "variables": {
+        "detail": {
+          "required": true,
+          "type": "any",
+          "input": "fromCaller"
+        }
+      },
+      "root": "checkIfEscapeKey",
+      "actions": {
+        "checkIfEscapeKey": {
+          "module": "vb/action/builtin/ifAction",
+          "parameters": {
+            "condition": "[[ $chain.variables.detail && $chain.variables.detail.hasOwnProperty('originalEvent') && $chain.variables.detail.originalEvent.key === 'Escape' ]]"
+          },
+          "outcomes": {
+            "true": "callDialogResponseChain"
+          },
+          "description": "check If use press Esc",
+          "label": "check If use press Esc"
+        },
+        "callDialogResponseChain": {
+          "module": "vb/action/builtin/callChainAction",
+          "parameters": {
+            "id": "dialogResponseChain",
+            "params": {
+              "detail": "[[ $chain.variables.detail ]]",
+              "response": "NO"
+            }
+          },
+          "description": "call dialogResponseChain with parameter NO",
+          "label": "call dialogResponseChain with parameter NO"
+        }
+      }
+    },
+    "dialogResponseChain": {
+      "description": "",
+      "variables": {
+        "detail": {
+          "required": true,
+          "type": "any",
+          "input": "fromCaller"
+        },
+        "response": {
+          "type": "string",
+          "required": false,
+          "input": "fromCaller"
+        }
+      },
+      "root": "callModuleFunction1",
+      "actions": {
+        "callModuleFunction1": {
+          "module": "vb/action/builtin/callModuleFunctionAction",
+          "parameters": {
+            "module": "{{$page.functions}}",
+            "functionName": "userResponse",
+            "params": [
+              "{{ $chain.variables.response }}"
+            ]
+          }
+        }
+      }
+    },
+    "dynamicFormTransientValueChangeChain": {
+      "description": "",
+      "variables": {
+        "detail": {
+          "required": true,
+          "type": "any",
+          "input": "fromCaller"
+        }
+      },
+      "root": "setDirtyDataFlag",
+      "actions": {
+        "setDirtyDataFlag": {
+          "module": "vb/action/builtin/assignVariablesAction",
+          "parameters": {
+            "$page.variables.dirtyDataFlag": {
+              "source": "[[ $chain.variables.detail.value === undefined || Object.keys($chain.variables.detail.value).length === 0 ? false : true ]]"
+            }
+          }
+        }
+      }
+    },
+    "goToParent": {
+      "root": "navigateToParentPage",
+      "description": "goToParent",
+      "actions": {
+        "navigateToParentPage": {
+          "module": "vb/action/builtin/navigateToPageAction",
+          "parameters": {
+            "page": "/",
+            "params": {}
+          }
+        }
+      }
+    },
+    "spCancelChain": {
+      "description": "",
+      "variables": {
+        "detail": {
+          "required": true,
+          "type": "any",
+          "input": "fromCaller"
+        }
+      },
+      "root": "navigateBack1",
+      "actions": {
+        "navigateBack1": {
+          "module": "vb/action/builtin/navigateBackAction"
+        }
+      }
+    },
+    "spSubmitChain": {
+      "description": "Submit form data",
+      "variables": {
+        "type": {
+          "required": true,
+          "type": "string",
+          "input": "fromCaller"
+        }
+      },
+      "root": "isFormValid",
+      "actions": {
+        "isFormValid": {
+          "module": "vb/action/builtin/ifAction",
+          "parameters": {
+            "condition": "[[ $page.variables.formState === 'valid' ]]"
+          },
+          "outcomes": {
+            "true": "saveDataChain",
+            "false": "showValidationMessages"
+          }
+        },
+        "showValidationMessages": {
+          "module": "vb/action/builtin/callComponentMethodAction",
+          "parameters": {
+            "component": "{{ document.querySelector('oj-dynamic-form') }}",
+            "method": "showMessages"
+          }
+        },
+        "saveDataChain": {
+          "module": "vb/action/builtin/callChainAction",
+          "parameters": {
+            "id": "<id of the create/save action chain created by VB DT>"
+          },
+          "outcomes": {
+            "success": "resetDirtyDataFlag"
+          }
+        },
+        "resetDirtyDataFlag": {
+          "module": "vb/action/builtin/resetVariablesAction",
+          "parameters": {
+            "variables": [
+              "$page.variables.dirtyDataFlag"
+            ]
+          },
+          "outcomes": {
+            "success": "isPrimaryAction"
+          }
+        },
+        "isPrimaryAction": {
+          "module": "vb/action/builtin/ifAction",
+          "parameters": {
+            "condition": "[[ $chain.variables.type === 'spPrimaryAction' ]]"
+          },
+          "outcomes": {
+            "true": "navigateBack",
+            "false": "setVariableIsSaved"
+          }
+        },
+        "navigateBack": {
+          "module": "vb/action/builtin/navigateBackAction"
+        },
+        "setVariableIsSaved": {
+          "module": "vb/action/builtin/assignVariablesAction",
+          "parameters": {
+            "$page.variables.isSaved": {
+              "source": true,
+              "auto": "always"
+            }
+          }
+        }
+      }
+    },
+    "showHelloDialogActionChain": {
+      "description": "",
+      "root": "if",
+      "actions": {
+        "if": {
+          "module": "vb/action/builtin/ifAction",
+          "parameters": {
+            "condition": "[[ $application.functions.isFormValid(\"helloForm\") ]]"
+          },
+          "outcomes": {
+            "true": "callHelloDialogOpenMethod"
+          },
+          "label": "Check to see if the form is valid.\n"
+        },
+        "callHelloDialogOpenMethod": {
+          "module": "vb/action/builtin/callComponentMethodAction",
+          "parameters": {
+            "component": "{{ document.getElementById('hello-dialog') }}",
+            "method": "open"
+          },
+          "outcomes": {}
+        }
+      },
+      "variables": {
+        "detail": {
+          "required": true,
+          "type": "any",
+          "input": "fromCaller"
+        }
+      }
+    }
+  },
+  "eventListeners": {
+    "closeButtonOjAction": {
+      "chains": [
+        {
+          "chainId": "ButtonActionChain",
+          "parameters": {
+            "detail": "{{ $event.detail }}"
+          }
+        }
+      ]
+    },
+    "confirmNoOjAction": {
+      "chains": [
+        {
+          "chainId": "dialogResponseChain",
+          "parameters": {
+            "detail": "{{ $event.detail }}",
+            "response": "NO"
+          }
+        }
+      ]
+    },
+    "confirmYesOjAction": {
+      "chains": [
+        {
+          "chainId": "dialogResponseChain",
+          "parameters": {
+            "detail": "{{ $event.detail }}",
+            "response": "YES"
+          }
+        }
+      ]
+    },
+    "dirtyDataWarningDialogOjClose": {
+      "chains": [
+        {
+          "chainId": "dialogCloseChain",
+          "parameters": {
+            "detail": "{{ $event.detail }}"
+          }
+        }
+      ]
+    },
+    "ojdynamicFormTransientValueChangeChain": {
+      "chains": [
+        {
+          "chainId": "dynamicFormTransientValueChangeChain",
+          "parameters": {
+            "detail": "{{ $event.detail}}"
+          }
+        }
+      ]
+    },
+    "ojSpCancel": {
+      "chains": [
+        {
+          "chainId": "spCancelChain",
+          "parameters": {
+            "detail": "{{ $event.detail }}"
+          }
+        }
+      ]
+    },
+    "ojSpGoToParent": {
+      "chains": [
+        {
+          "chainId": "goToParent",
+          "parameters": {}
+        }
+      ]
+    },
+    "ojSpSave": {
+      "chains": [
+        {
+          "chainId": "spSubmitChain",
+          "parameters": {
+            "type": "{{ $event.type }}"
+          }
+        }
+      ]
+    },
+    "ojSpSubmit": {
+      "chains": [
+        {
+          "chainId": "spSubmitChain",
+          "parameters": {
+            "type": "{{ $event.type }}"
+          }
+        }
+      ]
+    },
+    "showHelloButtonOjAction": {
+      "chains": [
+        {
+          "chainId": "showHelloDialogActionChain",
+          "parameters": {
+            "detail": "{{ $event.detail }}"
+          }
+        }
+      ]
+    },
+    "vbBeforeExit": {
+      "chains": [
+        {
+          "chainId": "checkBeforeExit",
+          "parameters": {}
+        }
+      ]
+    }
+  },
+  "imports": {
+    "components": {
+      "oj-button": {
+        "path": "ojs/ojbutton"
+      },
+      "oj-dialog": {
+        "path": "ojs/ojdialog"
+      },
+      "oj-dynamic-form": {
+        "path": "oj-dynamic/form/loader"
+      },
+      "oj-form-layout": {
+        "path": "ojs/ojformlayout"
+      },
+      "oj-input-text": {
+        "path": "ojs/ojinputtext"
+      },
+      "oj-sp-simple-create-edit": {
+        "path": "oj-sp/simple-create-edit/loader"
+      },
+      "oj-validation-group": {
+        "path": "ojs/ojvalidationgroup"
+      }
+    }
+  }
+}

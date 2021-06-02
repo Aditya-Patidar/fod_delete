@@ -1,0 +1,63 @@
+{
+    "component-dependencies": {
+        "oj-sp": {
+            "version": "2104.0.0-rc.2.0",
+            "components": {
+                "input-url": "2104.0.0-rc.2.0",
+                "header-general-overview": "2104.0.0-rc.2.0",
+                "foldout-layout-vertical-pattern": "2104.0.0-rc.2.0",
+                "object-card": "2104.0.0-rc.2.0",
+                "fa-css": "2104.0.0-rc.2.0",
+                "input-email": "2104.0.0-rc.2.0",
+                "header-navigation": "2104.0.0-rc.2.0",
+                "input-address": "2104.0.0-rc.2.0",
+                "item-overview-pattern": "2104.0.0-rc.2.0",
+                "overflow": "2104.0.0-rc.2.0",
+                "common": "2104.0.0-rc.2.0",
+                "foldout-panel": "2104.0.0-rc.2.0",
+                "header-create-edit": "2104.0.0-rc.2.0",
+                "task-card": "2104.0.0-rc.2.0",
+                "css-additions": "2104.0.0-rc.2.0",
+                "expandable-list-item": "2104.0.0-rc.2.0",
+                "profile-card": "2104.0.0-rc.2.0",
+                "list-item-template": "2104.0.0-rc.2.0",
+                "image": "2104.0.0-rc.2.0",
+                "select-single-item-template": "2104.0.0-rc.2.0",
+                "common-util": "2104.0.0-rc.2.0",
+                "thumbnail": "2104.0.0-rc.2.0",
+                "common-strings": "2104.0.0-rc.2.0",
+                "item-overview-page-pattern": "2104.0.0-rc.2.0",
+                "header-welcome-banner": "2104.0.0-rc.2.0",
+                "welcome-page": "2104.0.0-rc.2.0",
+                "input-currency": "2104.0.0-rc.2.0",
+                "summarizing-collection": "2104.0.0-rc.2.0",
+                "select-single-currency": "2104.0.0-rc.2.0",
+                "filter-chip": "2104.0.0-rc.2.0",
+                "attachments-simple": "2104.0.0-rc.2.0",
+                "item-overview": "2104.0.0-rc.2.0",
+                "card-footer": "2104.0.0-rc.2.0",
+                "smart-filters": "2104.0.0-rc.2.0",
+                "simple-create-edit-pattern": "2104.0.0-rc.2.0",
+                "input-key-flex-field": "2104.0.0-rc.2.0",
+                "list-section": "2104.0.0-rc.2.0",
+                "item-overview-page": "2104.0.0-rc.2.0",
+                "smart-filter-search": "2104.0.0-rc.2.0",
+                "simple-create-edit": "2104.0.0-rc.2.0",
+                "foldout-layout-horizontal-pattern": "2104.0.0-rc.2.0",
+                "foldout-layout": "2104.0.0-rc.2.0",
+                "smart-filter-search-pattern": "2104.0.0-rc.2.0",
+                "horizontal-overview": "2104.0.0-rc.2.0"
+            }
+        },
+        "oj-dynamic": {
+            "version": "9.2.0-rc.3",
+            "components": {
+                "shared": "9.2.0-rc.3",
+                "form": "9.2.0-rc.3",
+                "bind-field": "9.2.0-rc.3",
+                "providers": "9.2.0-rc.3",
+                "table": "9.2.0-rc.3"
+            }
+        }
+    }
+}

@@ -1,0 +1,35 @@
+<div class="oj-flex">
+	<oj-sp-smart-filter-search id="oj_ssfs1" page-title="{{$page.variables.pageTitle}}"
+		display-options.go-to-parent="false" smart-filters.expanded="{{ $page.variables.expanded}}"
+		smart-filters.value="{{ $page.variables.appliedFilters}}" smart-filters.ask-hint="{{ $page.variables.askHint}}"
+		smart-filters.results-data="[[$page.variables.searchResultsDP]]"
+		smart-filters.suggestions="[[$page.variables.searchSuggestionsDP]]"
+		smart-filters.suggestion-filters="[[$page.variables.suggestionFiltersDP]]"
+		select-context.item-text="{{$page.variables.selectContextItemText}}"
+		select-context.label-hint="{{$page.variables.selectContextLabelHint}}"
+		select-context-value="{{$page.variables.selectContextValue}}" display-mode="[[$page.variables.displayMode]]"
+		on-sp-go-to-parent="[[$listeners.ojSpGoToParent]]" show-all-total-count="[[$page.variables.showAllTotalCount]]"
+		class="oj-flex-item oj-sm-12 oj-md-12"
+		primary-action.label="[[ $application.translations.app.CREATE_ORDER_BUTTON ]]">
+		<oj-list-view slot="main" class="oj-flex-item" data="[[$page.variables.searchResultsDP]]"
+			scroll-policy-options.scroller="[[document.documentElement]]">
+			<template slot="itemTemplate">
+				<oj-sp-list-item-template selector.aria-label="[[ 'Select Item ' + $current.index ]]"
+      columns='[[ [{"primaryText":$current.data.CustomerDetails.CustomerName,"overlineText":"Customer Name"},{"primaryText":$current.data.OrderNumber,"overlineText":"Order","secondaryText":$application.functions.formatDate($current.data.OrderDate)},{"primaryText":$application.functions.formatCurrency($current.data.CurrencyCode, $current.data.TotalAmount),"overlineText":"Total Amount"}] ]]'
+      badge.text="[[$current.data.OrderStatus]]" badge.position="leading"
+      badge.status='[[$current.data.OrderStatus === "PROCESSING" ? "info" : "default"]]'
+      secondary-actions='[[ [{"id":"delete-order","label":"Delete Order","icon":"oj-ux-ico-trash","display":$current.data.OrderStatus === "PROCESSING" ? "disabled" : "on"}] ]]'
+      on-sp-secondary-action="[[$listeners.ojSpListItemTemplateSpSecondaryAction]]">
+				</oj-sp-list-item-template>
+			</template>
+		</oj-list-view>
+	</oj-sp-smart-filter-search>
+	<oj-dialog style="display:none" dialog-title="Delete Order" id="order-delete-conf-dialog">
+		<div slot="body">Are you sure you want to delete this order?
+		</div>
+		<div slot="footer">
+			<oj-button id="confirm-no" on-oj-action="[[$listeners.confirmNoOjAction]]">No</oj-button>
+  <oj-button id="confirm-yes" chroming="callToAction" on-oj-action="[[$listeners.confirmYesOjAction]]">Yes</oj-button>
+		</div>
+	</oj-dialog>
+</div>

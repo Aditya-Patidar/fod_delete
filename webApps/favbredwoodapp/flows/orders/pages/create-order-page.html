@@ -1,0 +1,51 @@
+<div class="oj-flex">
+  <div class="oj-flex-item oj-sm-12 oj-md-12">
+    <oj-sp-simple-create-edit id="oj_ssce1" page-title="{{$page.variables.pageTitle}}"
+      page-subtitle="{{$page.variables.subtitle}}" page-title-placeholder="{{$page.variables.pageTitlePlaceholder}}"
+      avatar="{{$page.variables.avatar}}"
+      primary-action.disabled="{{!($page.variables.primaryAlwaysOn || ($page.variables.dirtyDataFlag ? true : $page.variables.isSaved))}}"
+      display-options.save="{{$page.variables.saveOption!=='off'?$page.variables.dirtyDataFlag?'on':'disabled':'off'}}"
+      display-options.go-to-parent="{{$page.variables.goToParentOption }}"
+      contextual-info-sticky="{{ $page.variables.contextualInfoSticky }}"
+      display-options.contextual-info-label="{{$page.variables.contextualInfoLabelVisible}}"
+      display-mode="[[$page.variables.displayMode]]" on-sp-cancel="[[$listeners.ojSpCancel]]"
+      on-sp-save="[[$listeners.ojSpSave]]" on-sp-go-to-parent="[[$listeners.ojSpGoToParent]]"
+      on-sp-primary-action="[[$listeners.ojSpSubmit]]" >
+    <oj-validation-group slot="main" id="helloForm">
+      <oj-form-layout>
+        <oj-input-text label-hint="Name" required="true" value="{{ $variables.name }}"></oj-input-text>
+        <oj-button id="show-hello-button" on-oj-action="[[$listeners.showHelloButtonOjAction]]">Show</oj-button>
+      </oj-form-layout>
+    </oj-validation-group>
+    <oj-dialog style="display:none" dialog-title="Greeting" id="hello-dialog">
+      <div slot="body">
+        <div class="oj-flex">
+          <div class="oj-flex-item oj-sm-flex-initial">
+            <oj-bind-text value="[[ 'Hello, ' +  $variables.name + '!']]"></oj-bind-text>
+          </div>
+        </div>
+      </div>
+      <div slot="footer">
+        <oj-button id="close-button" on-oj-action="[[$listeners.closeButtonOjAction]]">Close</oj-button>
+      </div>
+    </oj-dialog>
+    </oj-sp-simple-create-edit>
+    <oj-dialog style="display:none" id="dirtyDataWarningDialog" role="alertdialog"
+      dialog-title="[[$application.translations.format('app','spSceWarningTitle')]]" cancel-behavior="escape"
+      on-oj-close="[[$listeners.dirtyDataWarningDialogOjClose]]">
+    <div slot="body">
+      <span role="img" class="oj-ux-ico-warning"
+        :aria-label="[[$application.translations.format('app','spSceWarningTitle')]]"></span>
+      <oj-bind-text value="[[$application.translations.format('app','spSceUnsavedDataMessage')]]"></oj-bind-text>
+    </div>
+    <div slot="footer">
+      <oj-button id="confirmNo" on-oj-action="[[$listeners.confirmNoOjAction]]">
+        <oj-bind-text value="[[$application.translations.format('app','spSceWarningNo')]]"></oj-bind-text>
+      </oj-button>
+      <oj-button id="confirmYes" on-oj-action="[[$listeners.confirmYesOjAction]]" chroming="callToAction" >
+        <oj-bind-text value="[[$application.translations.format('app','spSceWarningYes')]]"></oj-bind-text>
+      </oj-button>
+    </div>
+    </oj-dialog>
+  </div>
+</div>
